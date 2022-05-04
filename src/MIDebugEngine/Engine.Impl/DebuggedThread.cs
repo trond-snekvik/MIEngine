@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using MICore;
@@ -397,6 +397,8 @@ namespace Microsoft.MIDebugEngine
             if (resVal.Contains("name"))
             {
                 thread.Name = resVal.FindString("name");
+            } else if (resVal.Contains("details")) {
+                thread.Name = resVal.FindString("details");
             }
 
             return thread;
