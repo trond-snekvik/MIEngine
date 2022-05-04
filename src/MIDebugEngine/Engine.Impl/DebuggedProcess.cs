@@ -1145,21 +1145,7 @@ namespace Microsoft.MIDebugEngine
                     _callback.OnBreakpoint(thread, new ReadOnlyCollection<object>(new AD7BoundBreakpoint[] { }));
                     shouldContinue = false;
                 }
-                // MinGW sends a stopped event on attach. gdb<->gdbserver also sends a stopped event when first attached.
-                // If this is a gdb<->gdbserver connection, ignore this as the entryPoint
-                else if (IsLocalLaunchUsingServer())
-                {
-                    // If the stopped event occurs on gdbserver, ignore it unless it contains a filename.
-                    TupleValue frame = results.Results.TryFind<TupleValue>("frame");
-                    if (frame.Contains("file"))
-                    {
-                        this.EntrypointHit = true;
-                        await this.ClearEntrypointBreakpoint();
-                        _callback.OnEntryPoint(thread);
-                        shouldContinue = false;
-                    }
-                }
-                else
+                else if (!IsLocalLaunchUsingServer())
                 {
                     this.EntrypointHit = true;
                     await this.ClearEntrypointBreakpoint();
