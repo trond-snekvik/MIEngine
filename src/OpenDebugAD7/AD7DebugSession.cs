@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -2114,24 +2114,7 @@ namespace OpenDebugAD7
             {
                 if (thread != null)
                 {
-                    if (thread.GetName(out string name) == HRConstants.S_OK)
-                    {
-                        // Append the thread id as a suffix unless the engine is already including it
-                        if (thread.GetThreadId(out uint threadId) == HRConstants.S_OK)
-                        {
-                            string threadIdDecimal = threadId.ToString(CultureInfo.InvariantCulture);
-                            if (!Regex.IsMatch(name, string.Concat("\b", threadIdDecimal, "\b")))
-                            {
-                                name = string.Concat(name, " [", threadIdDecimal, "]");
-                            }
-                        }
-                        else
-                        {
-                            // We did not get a thread id. Skip adding to list.
-                            continue;
-                        }
-                    }
-                    else
+                    if (thread.GetName(out string name) != HRConstants.S_OK)
                     {
                         name = null;
                     }
