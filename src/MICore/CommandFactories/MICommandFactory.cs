@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -254,10 +254,15 @@ namespace MICore
         /// <summary>
         /// Continues running the target process
         /// </summary>
-        public async Task ExecContinue()
+        /// <param name="threadId">Optional Thread ID of thread to continue execution of</param>
+        public async Task ExecContinue(int threadId = -1)
         {
             string command = "-exec-continue";
-            await _debugger.CmdAsync(command, ResultClass.running);
+            if (threadId == -1) {
+                await _debugger.CmdAsync(command, ResultClass.running);
+            } else {
+                await ThreadCmdAsync(command, ResultClass.running, threadId);
+            }
         }
 
         /// <summary>

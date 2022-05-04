@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using MICore;
@@ -1073,6 +1073,18 @@ namespace Microsoft.MIDebugEngine
             DebuggedThread thread = await ThreadCache.GetThread(tid);
             if (thread == null)
             {
+                // Attempt to recover from the main thread dying in the setup phase:
+                if (!this.EntrypointHit) 
+                {
+                    DebuggedThread[] threads = await ThreadCache.GetThreads();
+                    
+                    if (threads.Length != 0) {
+                        await MICommandFactory.ExecContinue(threads[0].Id);
+                    }
+
+                    return;
+                }
+                
                 if (!this.IsStopDebuggingInProgress)
                 {
                     Debug.Fail("Failed to find thread on break event.");
